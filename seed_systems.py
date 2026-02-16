@@ -13,7 +13,7 @@ def seed_systems():
     try:
         systems_to_seed = [
             {"id": 1, "name": "Intelligence", "base_url": "https://digital.sbacem.com.br"},
-            {"id": 2, "name": "CRM", "base_url": "https://conversor.sbacem.app.br"},
+            {"id": 2, "name": "Conversor", "base_url": "https://conversor.sbacem.app.br"},
             {"id": 3, "name": "Sistema Cadastro", "base_url": "http://amplo.app.br"},
             {"id": 4, "name": "Fonogramas", "base_url": "http://fonogramas.sbacem.app.br"},
         ]
