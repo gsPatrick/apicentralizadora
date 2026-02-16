@@ -118,3 +118,15 @@ def get_my_systems(current_user: User = Depends(get_current_user), db: Session =
         {"id": s.id, "name": s.name, "base_url": s.base_url}
         for s in systems
     ]
+
+@router.get("/{user_id}/systems")
+def get_user_systems(user_id: int, current_user: User = Depends(get_admin_user), db: Session = Depends(get_db)):
+    """Returns systems a specific user has access to (Admin only)."""
+    systems = db.query(System).join(UserSystemAccess).filter(
+        UserSystemAccess.user_id == user_id
+    ).all()
+    
+    return [
+        {"id": s.id, "name": s.name, "base_url": s.base_url}
+        for s in systems
+    ]
