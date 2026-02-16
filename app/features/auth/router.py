@@ -94,11 +94,12 @@ def verify_session_browser(
     request: Request,
     system_id: int,
     redirect_url: str,
+    token: str = Query(None),
     db: Session = Depends(get_db)
 ):
-    # custom logic to pull token from cookie or header
-    token = request.cookies.get("access_token") 
-    # Note: In a real app, we'd want `Authorization: Bearer` support too, but this is a browser redirect flow.
+    # custom logic to pull token from query param, cookie or header
+    if not token:
+        token = request.cookies.get("access_token") 
     
     if not token:
         # Not logged in -> Redirect to Central Login (Frontend URL)
