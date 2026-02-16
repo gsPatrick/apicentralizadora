@@ -32,7 +32,10 @@ class UserResponse(BaseModel):
     class Config:
         from_attributes = True
 
-# ... (Dependency)
+def get_admin_user(current_user: User = Depends(get_current_user)):
+    if not current_user.is_superadmin and current_user.role != 'manage_users':
+        raise HTTPException(status_code=403, detail="Not authorized to manage users")
+    return current_user
 
 @router.post("/", response_model=UserResponse)
 def create_user(user: UserCreate, db: Session = Depends(get_db), admin: User = Depends(get_admin_user)):
