@@ -12,10 +12,9 @@ def update():
     ssh.connect(HOST, port=PORT, username=USER, password=PASSWORD)
     
     print("Pulling latest changes...")
-    stdin, stdout, stderr = ssh.exec_command("cd /opt/apicentralizadora && git pull")
-    print(stdout.read().decode())
+    ssh.exec_command("cd /opt/apicentralizadora && git pull")
     
-    print("Restarting Service (Triggers Table Creation)...")
+    print("Restarting Service...")
     ssh.exec_command("systemctl restart apicentralizadora")
     
     print("Checking Status...")
