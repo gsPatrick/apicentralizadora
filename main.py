@@ -6,6 +6,7 @@ from app.features.auth.router import router as auth_router
 from app.features.users.router import router as users_router
 from app.features.systems.router import router as systems_router
 from app.features.access.router import router as access_router
+from app.features.audit.router import router as audit_router
 
 # Create Database Tables
 Base.metadata.create_all(bind=engine)
@@ -26,6 +27,7 @@ app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(systems_router)
 app.include_router(access_router)
+app.include_router(audit_router)
 
 @app.get("/")
 def read_root():
