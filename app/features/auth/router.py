@@ -90,7 +90,7 @@ from starlette.requests import Request
 from starlette.responses import RedirectResponse
 
 @router.get("/verify-session-browser")
-def verify_session_browser(
+async def verify_session_browser(
     request: Request,
     system_id: int,
     redirect_url: str,
@@ -108,7 +108,7 @@ def verify_session_browser(
         return RedirectResponse(url=target)
 
     try:
-        user = get_current_user(token, db) # Re-using the logic manually
+        user = await get_current_user(token, db) # Re-using the logic manually
     except Exception:
         hub_login_url = "https://hub-sbacem.vercel.app/login"
         target = f"{hub_login_url}?system_id={system_id}&redirect_url={redirect_url}"
