@@ -8,4 +8,5 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     is_superadmin = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
     role = Column(String, nullable=True) # e.g. 'manage_users', 'manage_systems', etc.

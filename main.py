@@ -17,10 +17,11 @@ app = FastAPI(title=settings.PROJECT_NAME)
 # In a real scenario, you'd fetch allowed origins from the DB or a strict list
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Should be restrictive in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 app.include_router(auth_router)
