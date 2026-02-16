@@ -91,16 +91,16 @@ def verify_session_browser(
     
     if not token:
         # Not logged in -> Redirect to Central Login (Frontend URL)
-        # For this API-only task, we'll generic message or redirect to a login placeholder
-        # "If NOT logged in: Redirect to the Central Hub Login Page."
-        # Assuming Central Hub Login is at /docs for now or a frontend URL.
-        # returning 401 triggers the frontend to redirect commonly.
-        raise HTTPException(status_code=401, detail="Not logged in")
+        hub_login_url = "https://hub-sbacem.vercel.app/login"
+        target = f"{hub_login_url}?system_id={system_id}&redirect_url={redirect_url}"
+        return RedirectResponse(url=target)
 
     try:
         user = get_current_user(token, db) # Re-using the logic manually
     except Exception:
-         raise HTTPException(status_code=401, detail="Invalid session")
+        hub_login_url = "https://hub-sbacem.vercel.app/login"
+        target = f"{hub_login_url}?system_id={system_id}&redirect_url={redirect_url}"
+        return RedirectResponse(url=target)
     
     # Check Access
     access = db.query(UserSystemAccess).filter(
