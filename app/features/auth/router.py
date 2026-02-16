@@ -36,13 +36,24 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 
 @router.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = authenticate_user(db, form_data.username, form_data.password)
+    username = form_data.username.strip().lower() # Standardize
+    print(f"DEBUG: Login attempt for {username}")
+    user = authenticate_user(db, username, form_data.password)
+    
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        # One last try check if email exists with different case
+        user = db.query(User).filter(User.email.ilike(username)).first()
+        if user and authenticate_user(db, user.email, form_data.password):
+             print(f"DEBUG: Login successful via ILIKE for {user.email}")
+        else:
+            print(f"DEBUG: Login failed for {username}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect username or password",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+            
+    print(f"DEBUG: Login successful for {user.email}")
     access_token = create_user_token(user)
     return {"access_token": access_token, "token_type": "bearer"}
 
