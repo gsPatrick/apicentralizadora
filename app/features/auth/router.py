@@ -121,12 +121,14 @@ async def verify_session_browser(
     ).first()
 
     if not access:
-        raise HTTPException(status_code=403, detail="Access denied to this system")
+        unauthorized_url = "https://hub-sbacem.vercel.app/unauthorized"
+        return RedirectResponse(url=unauthorized_url)
 
     # Generate Transfer Token
     system = db.query(System).filter(System.id == system_id).first()
     if not system:
-        raise HTTPException(status_code=404, detail="System not found")
+        unauthorized_url = "https://hub-sbacem.vercel.app/unauthorized?error=system_not_found"
+        return RedirectResponse(url=unauthorized_url)
 
     transfer_data = {
         "sub": user.email,
