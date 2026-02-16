@@ -103,3 +103,18 @@ def delete_user(user_id: int, db: Session = Depends(get_db), admin: User = Depen
     
     log_action(db, user_id=admin.id, action="DELETE_USER", details=f"Deleted user: {user_email} (ID: {user_id})")
     return {"detail": "User deleted"}
+
+from app.models.system import System
+from app.models.access import UserSystemAccess
+
+@router.get("/me/systems")
+def get_my_systems(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Returns systems the current user has access to."""
+    systems = db.query(System).join(UserSystemAccess).filter(
+        UserSystemAccess.user_id == current_user.id
+    ).all()
+    
+    return [
+        {"id": s.id, "name": s.name, "base_url": s.base_url}
+        for s in systems
+    ]
