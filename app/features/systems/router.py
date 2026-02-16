@@ -52,6 +52,10 @@ def create_system(system: SystemCreate, db: Session = Depends(get_db), admin: Us
 def read_systems(db: Session = Depends(get_db), admin: User = Depends(get_system_admin)):
     return db.query(System).all()
 
+@router.get("/public", response_model=List[SystemResponse])
+def read_systems_public(db: Session = Depends(get_db)):
+    return db.query(System).all()
+
 @router.delete("/{system_id}")
 def delete_system(system_id: int, db: Session = Depends(get_db), admin: User = Depends(get_system_admin)):
     system = db.query(System).filter(System.id == system_id).first()
